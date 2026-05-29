@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>C3A Labs — Decision Board</title>
+<style>
+:root{
+  --k:#000;--n:#0a0a0a;--s:#111;--d:#1a1a1a;--m:#222;
+  --w:#fff;--f:#f5f5f5;--g:#e8e8e8;
+  --t1:rgba(255,255,255,.92);--t2:rgba(255,255,255,.6);--t3:rgba(255,255,255,.35);
+  --l1:rgba(0,0,0,.88);--l2:rgba(0,0,0,.55);--l3:rgba(0,0,0,.35);
+  --blue:#2563eb;--blue-l:#60a5fa;
+  --green:#22c55e;--green-d:#14532d;--green-bg:#052e16;
+  --amber:#f59e0b;--amber-d:#78350f;--amber-bg:#1c1000;
+  --red:#ef4444;--red-d:#7f1d1d;--red-bg:#1a0000;
+  --bd-d:rgba(255,255,255,.07);--bd-l:rgba(0,0,0,.08);
+  --r8:8px;--r12:12px;--r16:16px;
+  --sh:0 2px 16px rgba(0,0,0,.25);
+  --f1:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --max:1040px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--f1);background:var(--k);color:var(--t1);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+/* NAV */
+nav{position:sticky;top:0;z-index:99;background:rgba(0,0,0,.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--bd-d)}
+.nav-i{max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:44px}
+.nav-b{font-size:13px;font-weight:700;color:var(--w);letter-spacing:-.2px}
+.nav-b span{color:var(--blue-l)}
+.nav-ls{display:flex;gap:2px;list-style:none}
+.nav-ls a{font-size:11px;color:var(--t2);text-decoration:none;padding:4px 8px;border-radius:5px;transition:.15s;white-space:nowrap}
+.nav-ls a:hover{color:var(--w);background:rgba(255,255,255,.07)}
+.nav-tag{font-size:10px;color:var(--t3);letter-spacing:.5px;text-transform:uppercase}
+/* LAYOUT */
+.sec{padding:72px 0}
+.sec-l{padding:64px 0;background:var(--f);color:var(--l1)}
+.c{max-width:var(--max);margin:0 auto;padding:0 22px}
+/* TYPE */
+.ey{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;color:var(--t3)}
+.ey-b{color:var(--blue-l)}.ey-g{color:var(--green)}.ey-l{color:var(--l3)}
+h2{font-size:clamp(24px,3.5vw,40px);font-weight:700;line-height:1.08;letter-spacing:-.25px}
+h3{font-size:clamp(17px,2.2vw,22px);font-weight:600;line-height:1.15;letter-spacing:-.15px}
+h4{font-size:15px;font-weight:700;line-height:1.3}
+p{font-size:15px;line-height:1.65;color:var(--t2)}
+p.l{color:var(--l2)}
+.lead{font-size:clamp(16px,1.8vw,19px);line-height:1.55;color:var(--t2)}
+.div{width:32px;height:2px;background:var(--blue);margin:14px 0}
+.div-l{background:rgba(0,0,0,.2)}
+/* UTILITIES */
+.mt8{margin-top:8px}.mt16{margin-top:16px}.mt24{margin-top:24px}.mt32{margin-top:32px}.mt48{margin-top:48px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.tc{text-align:center}
+/* PILL */
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:3px 8px;border-radius:20px}
+.pill::before{content:"";width:4px;height:4px;border-radius:50%;background:currentColor}
+.p-g{background:rgba(34,197,94,.12);color:#4ade80}
+.p-a{background:rgba(245,158,11,.12);color:#fbbf24}
+.p-r{background:rgba(239,68,68,.12);color:#f87171}
+.p-b{background:rgba(37,99,235,.15);color:var(--blue-l)}
+.p-n{background:rgba(255,255,255,.06);color:var(--t2)}
+.p0{background:rgba(239,68,68,.15);color:#f87171;font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:2px 7px;border-radius:4px}
+.p1{background:rgba(245,158,11,.12);color:#fbbf24;font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:2px 7px;border-radius:4px}
+/* CARDS */
+.card{background:var(--d);border-radius:var(--r12);padding:20px;border:1px solid var(--bd-d)}
+.card-l{background:var(--w);border-radius:var(--r12);padding:20px;border:1px solid var(--bd-l);box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.card h4{color:var(--w);margin-bottom:6px}
+.card p{font-size:13px;color:var(--t2)}
+.card-l h4{color:var(--l1);margin-bottom:6px}
+.card-l p{font-size:13px;color:var(--l2)}
+.card-tag{font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--blue-l);margin-bottom:6px}
+.card-tag-l{font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--l3);margin-bottom:6px}
+/* CALLOUT */
+.co{border-left:2px solid var(--blue);background:rgba(37,99,235,.06);border-radius:0 var(--r8) var(--r8) 0;padding:12px 16px}
+.co-r{border-color:var(--red);background:rgba(239,68,68,.06)}
+.co-g{border-color:var(--green);background:rgba(34,197,94,.05)}
+.co p{font-size:14px;color:var(--t1)}.co strong{color:var(--w)}
+/* TABLES */
+.tw{overflow-x:auto;margin-top:20px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{text-align:left;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:8px 12px;border-bottom:1px solid var(--bd-d);color:var(--t3)}
+tbody td{padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top;line-height:1.5;color:var(--t1)}
+tbody tr:last-child td{border:none}
+table.tl thead th{border-color:var(--bd-l);color:var(--l3)}
+table.tl tbody td{border-color:rgba(0,0,0,.04);color:var(--l1)}
+.td-url{font-size:11px;font-family:monospace;color:var(--blue-l)}
+/* ARCH DIAGRAM */
+.arch{margin-top:32px}
+.arch-top{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:3px}
+.arch-b{padding:22px 20px}
+.arch-k{background:#111;border-radius:var(--r12) 0 0 0}
+.arch-s{background:var(--blue);border-radius:0 var(--r12) 0 0}
+.arch-core{background:#0d0d0d;border:1px solid var(--bd-d);border-radius:0 0 var(--r12) var(--r12);padding:18px 20px;border-top:none}
+.arch-b .ab-tag{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:4px}
+.arch-b .ab-name{font-size:18px;font-weight:800;color:var(--w);margin-bottom:5px}
+.arch-b .ab-desc{font-size:12px;color:rgba(255,255,255,.6);line-height:1.5}
+.arch-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.arch-chip{font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+.core-chips{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-top:8px}
+/* 3-COL TODAY */
+.today-g{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-top:24px}
+.tc-col{padding:22px 18px;border-radius:0}
+.tc-col:first-child{border-radius:var(--r12) 0 0 var(--r12)}
+.tc-col:last-child{border-radius:0 var(--r12) var(--r12) 0}
+.tc-s{background:#061a0b}
+.tc-a{background:#1a1000}
+.tc-r{background:#180200}
+.tc-head{font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.06)}
+.tc-head::before{content:"";width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.tc-s .tc-head{color:var(--green)}.tc-s .tc-head::before{background:var(--green)}
+.tc-a .tc-head{color:var(--amber)}.tc-a .tc-head::before{background:var(--amber)}
+.tc-r .tc-head{color:var(--red)}.tc-r .tc-head::before{background:var(--red)}
+.tc-item{font-size:12px;color:rgba(255,255,255,.65);padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);line-height:1.4}
+.tc-item:last-child{border:none}
+.tc-item b{display:block;font-size:12px;color:rgba(255,255,255,.88);font-weight:600}
+/* GOOD VS BAD */
+.gb-g{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:24px}
+.gb-col{padding:24px 20px;border-radius:var(--r12)}
+.gb-good{background:#040e07;border:1px solid rgba(34,197,94,.12)}
+.gb-bad{background:#0e0404;border:1px solid rgba(239,68,68,.12)}
+.gb-head{font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.06)}
+.gb-good .gb-head{color:var(--green)}.gb-bad .gb-head{color:var(--red)}
+.gb-item{font-size:13px;color:rgba(255,255,255,.72);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:flex-start;gap:8px;line-height:1.4}
+.gb-item:last-child{border:none}
+.gb-good .gb-item::before{content:"+";color:var(--green);font-weight:800;flex-shrink:0;width:12px}
+.gb-bad .gb-item::before{content:"×";color:var(--red);font-weight:800;flex-shrink:0;width:12px}
+/* FS TREE */
+.fs-root{text-align:center;margin-bottom:24px}
+.fs-root-box{display:inline-block;background:var(--blue);border-radius:var(--r8);padding:10px 24px;font-size:14px;font-weight:800;color:var(--w);letter-spacing:-.1px}
+.fs-branches{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.fs-branch{border-radius:var(--r12);padding:16px 14px;border:1px solid var(--bd-d);background:var(--d);position:relative}
+.fs-branch.fs-first{border-color:rgba(34,197,94,.3);background:#051209}
+.fs-branch.fs-second{border-color:rgba(37,99,235,.25);background:#040c1a}
+.fs-branch.fs-later{border-color:rgba(245,158,11,.15);background:var(--s)}
+.fs-branch.fs-avoid{border-color:rgba(255,255,255,.05);background:#0d0d0d;opacity:.65}
+.fs-name{font-size:13px;font-weight:700;color:var(--w);margin-bottom:10px;line-height:1.3}
+.fs-first .fs-name{color:#4ade80}
+.fs-second .fs-name{color:var(--blue-l)}
+.fs-meta{margin-bottom:8px}
+.fs-meta-row{display:flex;justify-content:space-between;align-items:baseline;font-size:11px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.fs-meta-row:last-child{border:none}
+.fs-meta-row span:first-child{color:rgba(255,255,255,.4);font-weight:600;font-size:10px;letter-spacing:.3px;text-transform:uppercase}
+.fs-meta-row span:last-child{color:rgba(255,255,255,.78);font-weight:500}
+.fs-agents-head{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:rgba(255,255,255,.3);margin:10px 0 5px}
+.fs-agent{font-size:10px;color:rgba(255,255,255,.6);padding:2px 0;line-height:1.4}
+.fs-skills-chips{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px}
+.fs-skill{font-size:9px;padding:2px 7px;border-radius:20px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.55)}
+.fs-timing-badge{position:absolute;top:10px;right:10px}
+/* COMPETITOR MAP */
+.comp-g{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}
+.comp-group{background:var(--d);border-radius:var(--r12);padding:18px 16px;border:1px solid var(--bd-d)}
+.comp-group-head{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--t3);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--bd-d)}
+.comp-names{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:6px}
+.comp-does{font-size:12px;color:var(--t2);margin-bottom:5px;line-height:1.4}
+.comp-stop{font-size:11px;color:rgba(255,255,255,.4);font-style:italic}
+/* JUMP CARD */
+.jump-box{background:var(--n);border-radius:var(--r16);padding:24px;border:1px solid rgba(255,255,255,.08);margin-top:20px;position:relative;overflow:hidden}
+.jump-box::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--red)}
+.jump-facts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+.jf{background:rgba(255,255,255,.04);border-radius:var(--r8);padding:10px 12px;border:1px solid rgba(255,255,255,.05)}
+.jf-l{font-size:9px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--t3);margin-bottom:3px}
+.jf-v{font-size:13px;font-weight:700;color:var(--t1)}
+/* GAP DIAGRAM */
+.gap-g{display:grid;grid-template-columns:1fr 40px 1fr;gap:0;align-items:stretch;margin-top:24px}
+.gap-side{border-radius:var(--r12);padding:20px}
+.gap-stop{background:var(--s);border:1px solid var(--bd-d)}
+.gap-start{background:#040e07;border:1px solid rgba(34,197,94,.2)}
+.gap-arrow{display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:18px}
+.gap-head{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06)}
+.gap-stop .gap-head{color:var(--t3)}.gap-start .gap-head{color:var(--green)}
+.gap-item{font-size:12px;color:var(--t2);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:center;gap:7px;line-height:1.4}
+.gap-item:last-child{border:none}
+.gap-stop .gap-item::before{content:"";width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0}
+.gap-start .gap-item{color:rgba(255,255,255,.88);font-weight:500}
+.gap-start .gap-item::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--green);flex-shrink:0}
+/* WEDGE FLOW */
+.wf{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin-top:24px}
+.wf-step{background:var(--w);border-radius:var(--r8);overflow:hidden;border:1px solid var(--bd-l)}
+.wf-top{height:3px}
+.w1 .wf-top{background:#525252}.w2 .wf-top{background:#404040}
+.w3 .wf-top{background:var(--blue)}.w4 .wf-top{background:var(--green)}
+.w5 .wf-top{background:#7c3aed}.w6 .wf-top{background:#525252}
+.wf-b{padding:11px 10px}
+.wf-num{font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:rgba(0,0,0,.3);margin-bottom:2px}
+.wf-name{font-size:13px;font-weight:800;color:var(--l1);margin-bottom:7px}
+.wf-lbl{font-size:9px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;color:rgba(0,0,0,.3);margin-bottom:2px;margin-top:6px}
+.wf-lbl:first-of-type{margin-top:0}
+.wf-v{font-size:10px;color:rgba(0,0,0,.6);line-height:1.4}
+.wf-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;margin-top:7px}
+.wf-badge::before{content:"";width:3px;height:3px;border-radius:50%;background:currentColor}
+.wb-req{background:rgba(34,197,94,.1);color:#15803d}
+.wb-auto{background:rgba(0,0,0,.05);color:rgba(0,0,0,.4)}
+/* CLAIM RULES */
+.cr-g{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-top:24px}
+.cr-col{border-radius:var(--r12);padding:20px 16px}
+.cr-g-c{background:var(--green-bg);border:1px solid rgba(34,197,94,.18)}
+.cr-y-c{background:var(--amber-bg);border:1px solid rgba(245,158,11,.18)}
+.cr-r-c{background:var(--red-bg);border:1px solid rgba(239,68,68,.18)}
+.cr-head{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:6px}
+.cr-head::before{content:"";width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cr-g-c .cr-head{color:var(--green)}.cr-g-c .cr-head::before{background:var(--green)}
+.cr-y-c .cr-head{color:var(--amber)}.cr-y-c .cr-head::before{background:var(--amber)}
+.cr-r-c .cr-head{color:var(--red)}.cr-r-c .cr-head::before{background:var(--red)}
+.cr-item{font-size:11px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);line-height:1.45;color:rgba(255,255,255,.7)}
+.cr-item b{display:block;color:rgba(255,255,255,.9);font-size:11px;font-weight:600;margin-bottom:1px}
+.cr-item:last-child{border:none}
+/* FINAL CARDS */
+.fc-g{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}
+.fc{background:var(--n);border-radius:var(--r12);padding:16px 18px;border:1px solid rgba(255,255,255,.07)}
+.fc-q{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--t3);margin-bottom:5px}
+.fc-a{font-size:14px;color:var(--t1);font-weight:500;line-height:1.55}
+.fc-a.g{color:#4ade80}.fc-a.a{color:#fbbf24}.fc-a.r{color:#f87171}.fc-a.b{color:var(--blue-l)}
+.fc-hero{grid-column:1/-1;background:var(--blue);border-radius:var(--r12);padding:24px;text-align:center}
+.fc-hero h3{font-size:20px;color:var(--w);margin-bottom:6px}
+.fc-hero p{font-size:14px;color:rgba(255,255,255,.8);max-width:560px;margin:0 auto;line-height:1.6}
+/* DECISION CARD */
+.verdict-box{background:var(--d);border-radius:var(--r16);padding:24px;border:1px solid rgba(34,197,94,.2);margin-top:24px}
+.verdict-row{display:flex;align-items:baseline;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.verdict-row:last-child{border:none}
+.vr-k{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--t3);width:110px;flex-shrink:0}
+.vr-v{font-size:14px;color:var(--t1);font-weight:500;line-height:1.5}
+/* WHY CARDS */
+.why-g{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:24px}
+.why-card{border-radius:var(--r12);padding:18px 16px;border:1px solid var(--bd-d)}
+.why-g-c .why-card{background:#060f09;border-color:rgba(34,197,94,.1)}
+.why-r-c .why-card{background:#0e0404;border-color:rgba(239,68,68,.1)}
+.why-card h4{font-size:13px;font-weight:700;margin-bottom:5px}
+.why-g-c .why-card h4{color:rgba(74,222,128,.9)}
+.why-r-c .why-card h4{color:rgba(248,113,113,.9)}
+.why-card p{font-size:12px;color:rgba(255,255,255,.55);line-height:1.5}
+/* FOOTER */
+footer{background:var(--n);padding:28px 0;border-top:1px solid var(--bd-d)}
+/* RESPONSIVE */
+@media(max-width:768px){
+  .nav-ls{display:none}
+  .arch-top,.today-g,.gb-g,.g2,.g3,.g4,.comp-g,.fs-branches,.wf,.cr-g,.fc-g,.why-g,.gap-g,.jump-facts{grid-template-columns:1fr}
+  .arch-k{border-radius:var(--r12) var(--r12) 0 0}
+  .arch-s{border-radius:0}
+  .arch-core{border-radius:0 0 var(--r12) var(--r12)}
+  .tc-col:first-child{border-radius:var(--r12) var(--r12) 0 0}
+  .tc-col:last-child{border-radius:0 0 var(--r12) var(--r12)}
+  .tc-col{border-radius:0}
+  .gap-g{grid-template-columns:1fr}
+  .gap-arrow{display:none}
+  .fc-hero{grid-column:1}
+}
+@media(max-width:1000px){
+  .fs-branches{grid-template-columns:repeat(2,1fr)}
+  .wf{grid-template-columns:repeat(3,1fr)}
+  .jump-facts{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<!-- NAV -->
+<nav>
+  <div class="nav-i">
+    <div class="nav-b">C3A Labs <span>/</span> Decision Board</div>
+    <ul class="nav-ls">
+      <li><a href="#arch">Architecture</a></li>
+      <li><a href="#today">Today</a></li>
+      <li><a href="#fixes">Website</a></li>
+      <li><a href="#sarvax">SarvaX</a></li>
+      <li><a href="#tree">FS Tree</a></li>
+      <li><a href="#attract">Attract</a></li>
+      <li><a href="#comp">Competitors</a></li>
+      <li><a href="#gap">Gap</a></li>
+      <li><a href="#wedge">Wedge</a></li>
+      <li><a href="#claims">Claims</a></li>
+      <li><a href="#verdict">Verdict</a></li>
+    </ul>
+    <span class="nav-tag">Internal — May 2026</span>
+  </div>
+</nav>
+
+<!-- SECTION 0: FOUNDER VERDICT -->
+<section class="sec" style="padding:80px 0 64px" id="verdict-top">
+  <div class="c">
+    <div class="ey ey-b">Founder Decision Board</div>
+    <h2>Should C3A Labs move into Financial Services?</h2>
+    <p class="lead mt16" style="max-width:560px">Yes. Through SarvaX, not KaraX. The infrastructure exists. The story needs packaging. The website needs cleaning. The window is real but not permanent.</p>
+
+    <div class="verdict-box mt32">
+      <div class="verdict-row">
+        <span class="vr-k">Decision</span>
+        <span class="vr-v" style="color:#4ade80;font-weight:700">Enter Financial Services via SarvaX. KaraX stays as the user-facing workspace.</span>
+      </div>
+      <div class="verdict-row">
+        <span class="vr-k">First target</span>
+        <span class="vr-v">Independent RIAs — 5 to 20 advisors, SEC-registered, not broker-dealer affiliated</span>
+      </div>
+      <div class="verdict-row">
+        <span class="vr-k">Why</span>
+        <span class="vr-v">Shortest sales cycle. Lower compliance burden. KaraX/CORE capabilities map directly to the pain. Annual review workflow is a clear demo.</span>
+      </div>
+      <div class="verdict-row">
+        <span class="vr-k">Main risk</span>
+        <span class="vr-v" style="color:#fbbf24">Jump is moving from notetaker to AI operating system. The execution layer window is 12–18 months, not 3 years.</span>
+      </div>
+      <div class="verdict-row">
+        <span class="vr-k">First fix</span>
+        <span class="vr-v" style="color:#f87171">Remove SOC 2 / HIPAA / BAA / FINRA claims from KaraX website today. Before any outreach starts.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 1: ARCHITECTURE -->
+<section class="sec" style="padding-top:0;padding-bottom:72px" id="arch">
+  <div class="c">
+    <div class="ey ey-b">01 — Architecture</div>
+    <h2>KaraX / SarvaX / CORE</h2>
+    <div class="div"></div>
+    <p style="max-width:520px">One engine. Two stories. KaraX is what we built. SarvaX is how we sell it to businesses. CORE runs both.</p>
+
+    <div class="arch mt32">
+      <div class="arch-top">
+        <div class="arch-b arch-k">
+          <div class="ab-tag">Built product — B2C / Professional</div>
+          <div class="ab-name">KaraX</div>
+          <div class="ab-desc">User operates the AI. AI workspace for individuals and teams. Meetings, documents, Aura, workflows, skills.</div>
+          <div class="arch-chips">
+            <span class="arch-chip">OneChat</span><span class="arch-chip">Meeting Bot</span><span class="arch-chip">RAG / Docs</span>
+            <span class="arch-chip">Workflows</span><span class="arch-chip">Skills</span><span class="arch-chip">Aura</span>
+            <span class="arch-chip">Composio / MCP</span><span class="arch-chip">Multi-model</span><span class="arch-chip">Approval UI</span>
+          </div>
+        </div>
+        <div class="arch-b arch-s">
+          <div class="ab-tag">B2B packaging — vertical revenue</div>
+          <div class="ab-name">SarvaX</div>
+          <div class="ab-desc">AI operates business workflows. Vertical agent packages configured on top of CORE. Not a fully separate product yet.</div>
+          <div class="arch-chips">
+            <span class="arch-chip" style="background:rgba(255,255,255,.18)">Wealth Advisory</span>
+            <span class="arch-chip" style="background:rgba(255,255,255,.18)">HR Agent</span>
+            <span class="arch-chip" style="background:rgba(255,255,255,.18)">Sales Follow-through</span>
+            <span class="arch-chip" style="background:rgba(255,255,255,.18)">Approved Workflows</span>
+            <span class="arch-chip" style="background:rgba(255,255,255,.18)">Enterprise Governance</span>
+          </div>
+        </div>
+      </div>
+      <div class="arch-core">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:rgba(255,255,255,.35);text-align:center;margin-bottom:6px">Shared Intelligence Infrastructure</div>
+        <div style="font-size:16px;font-weight:800;color:var(--w);text-align:center;margin-bottom:10px">CORE</div>
+        <div class="core-chips">
+          <span class="arch-chip">Multi-model AI</span><span class="arch-chip">Meeting Intelligence</span>
+          <span class="arch-chip">RAG &amp; Memory</span><span class="arch-chip">Workflow Engine</span>
+          <span class="arch-chip">Skills Framework</span><span class="arch-chip">Composio / MCP</span>
+          <span class="arch-chip">Aura / COS</span><span class="arch-chip">Approval Patterns</span>
+        </div>
+        <div style="text-align:center;font-size:11px;color:rgba(255,255,255,.28);margin-top:8px;font-style:italic">CORE is investor and internal language. It does not need to be a public-facing brand.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: TODAY MAP -->
+<section class="sec-l" id="today">
+  <div class="c">
+    <div class="ey ey-l">02 — Today Map</div>
+    <h2 style="color:var(--l1)">What is real, what is partial, what is not safe to claim</h2>
+    <div class="div div-l"></div>
+
+    <div class="today-g mt24">
+      <div class="tc-col tc-s">
+        <div class="tc-head">Genuinely strong</div>
+        <div class="tc-item"><b>Meeting intelligence</b>AssemblyAI diarization, transcripts, action items — production grade</div>
+        <div class="tc-item"><b>Aura / COS</b>DAG planning, parallel subagents, tool calls — mature and stable</div>
+        <div class="tc-item"><b>OneChat + RAG</b>Document context over uploaded files — works for standard text</div>
+        <div class="tc-item"><b>Workflows &amp; Skills</b>Sequential workflows, reusable skill templates — functional</div>
+        <div class="tc-item"><b>Composio / MCP</b>Google, Slack, Notion, Jira, email — OAuth working</div>
+        <div class="tc-item"><b>Multi-model routing</b>Claude, Gemini — real and tested</div>
+        <div class="tc-item"><b>Approval card UI</b>Works live in sessions — needs persistence added</div>
+      </div>
+      <div class="tc-col tc-a">
+        <div class="tc-head">Partly built</div>
+        <div class="tc-item"><b>Approval persistence</b>WebSocket only — approval state lost on disconnect or refresh</div>
+        <div class="tc-item"><b>CRM writeback</b>Salesforce/HubSpot more ready. Wealthbox/Redtail field mapping not verified.</div>
+        <div class="tc-item"><b>Proactive Aura</b>Aura is user-triggered today, not always-on background</div>
+        <div class="tc-item"><b>RBAC</b>All org members share same credentials. No role differentiation yet.</div>
+        <div class="tc-item"><b>Agent builder</b>Single-agent builder in Django. Not a polished no-code product.</div>
+        <div class="tc-item"><b>Parallel workflows</b>V2 is roadmap. Sequential only today.</div>
+        <div class="tc-item"><b>Security proof</b>/security and /trust pages are 404. Badges have no linked proof.</div>
+      </div>
+      <div class="tc-col tc-r">
+        <div class="tc-head">Do not claim</div>
+        <div class="tc-item"><b>SOC 2 Type II</b>Badges appear on site. No linked cert. No trust center. Remove or link proof.</div>
+        <div class="tc-item"><b>HIPAA compliant</b>BAA claims with no BAA documentation. Legal risk.</div>
+        <div class="tc-item"><b>FINRA / SEC ready</b>On the pricing page as a commercial claim. Not built.</div>
+        <div class="tc-item"><b>WORM storage</b>Not built. Records can be edited or deleted.</div>
+        <div class="tc-item"><b>No human in the loop</b>Workflow page says exactly this. It is the opposite of the product truth.</div>
+        <div class="tc-item"><b>Always-on agents</b>Agent page says "no manual triggers, just continuous execution." Overstated.</div>
+        <div class="tc-item"><b>Investment advice</b>Never. Legal exposure. No context makes this acceptable.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: GOOD VS BAD -->
+<section class="sec" style="padding-top:64px;padding-bottom:64px">
+  <div class="c">
+    <div class="ey ey-b">03 — Position</div>
+    <h2>What we have going for us and what we need to fix</h2>
+    <div class="div"></div>
+
+    <div class="gb-g">
+      <div class="gb-col gb-good">
+        <div class="gb-head">What is good</div>
+        <div class="gb-item">Real, working product exists — not a prototype</div>
+        <div class="gb-item">Meeting intelligence fits financial services better than most categories</div>
+        <div class="gb-item">Aura can orchestrate multi-step advisor workflows using what is already built</div>
+        <div class="gb-item">SarvaX can move faster than competitors because KaraX/CORE already exists</div>
+        <div class="gb-item">Financial services buyers understand GenAI value — no education needed</div>
+        <div class="gb-item">Independent RIA decision cycle is weeks, not months</div>
+        <div class="gb-item">The execution layer gap is real and not yet owned by anyone</div>
+      </div>
+      <div class="gb-col gb-bad">
+        <div class="gb-head">What needs to be fixed now</div>
+        <div class="gb-item">KaraX website claims SOC 2 Type II, HIPAA, BAA, GDPR with no proof or linked documentation</div>
+        <div class="gb-item">Pricing page lists "SEC 206(4)-7 &amp; FINRA Ready" as an enterprise feature — it is not built</div>
+        <div class="gb-item">Workflow page explicitly says "without a human in the loop" — the opposite of the product</div>
+        <div class="gb-item">AI agents page says "always-on, no manual triggers, just continuous execution" — overstated</div>
+        <div class="gb-item">/security and /trust are 404. Certification badges have nothing to link to.</div>
+        <div class="gb-item">Approval records are transient — lost on page refresh. Blocks any real pilot.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: WEBSITE FIXES -->
+<section class="sec-l" id="fixes">
+  <div class="c">
+    <div class="ey ey-l">04 — Website Audit</div>
+    <h2 style="color:var(--l1)">Live KaraX production issues</h2>
+    <div class="div div-l"></div>
+    <p class="l mt8" style="max-width:560px">Based on the latest live production scan, not REPORTV4. Previous issues (Redtail/Wealthbox tiles, WORM on wealth pages, Reg BI claims) have already been fixed on production.</p>
+
+    <div style="background:#0d1f0d;border:1px solid rgba(34,197,94,.15);border-radius:var(--r8);padding:10px 14px;margin-top:16px;font-size:12px;color:rgba(74,222,128,.8)">
+      Already fixed on production: Redtail/Wealthbox integration tiles, WORM claims on wealth pages, Reg BI / Basel III / IFRS copy, heavy FINRA language on /financial-services, OneChat "connected to all CRMs/ERPs" claim. The pages /solutions/wealth-management-advisors, /financial-services, /onechat, /integrations, /about are mostly clean.
+    </div>
+
+    <div class="tw mt24">
+      <table class="tl">
+        <thead>
+          <tr>
+            <th>Page</th>
+            <th>Live Problem</th>
+            <th>Risk</th>
+            <th>Fix</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="td-url" style="color:var(--blue)">/real-time-meeting-assistant</span></td>
+            <td>"SOC 2 Type II certified, HIPAA compliant, GDPR-ready" + trust badges. No linked proof, no cert, no trust center.</td>
+            <td><span class="p0">P0</span></td>
+            <td>Remove badges until /security page and SOC 2 report are live. Or replace with "in process."</td>
+          </tr>
+          <tr>
+            <td><span class="td-url" style="color:var(--blue)">/features</span></td>
+            <td>Same SOC 2 / HIPAA / BAA / GDPR badges. RBAC listed as confirmed feature.</td>
+            <td><span class="p0">P0</span></td>
+            <td>Remove or qualify. RBAC is not fully built — do not list as a confirmed capability.</td>
+          </tr>
+          <tr>
+            <td><span class="td-url" style="color:var(--blue)">/pricing</span></td>
+            <td>Enterprise tier says "SEC 206(4)-7 &amp; FINRA Ready." This is a commercial pricing claim for an unbuilt capability.</td>
+            <td><span class="p0">P0</span></td>
+            <td>Remove immediately. Only add back when the regulatory architecture is built and documented.</td>
+          </tr>
+          <tr>
+            <td><span class="td-url" style="color:var(--blue)">/workflow</span></td>
+            <td>"passing work between themselves without a human in the loop. KaraX.ai is built on exactly this architecture" + "AI agents that act without manual triggers."</td>
+            <td><span class="p0">P0</span></td>
+            <td>Rewrite as: "multi-step AI workflows where every critical action requires your approval." Human approval is the product — lead with it.</td>
+          </tr>
+          <tr>
+            <td><span class="td-url" style="color:var(--blue)">/ (homepage)</span></td>
+            <td>"handles the busywork autonomously" + "Always on. Never forgets."</td>
+            <td><span class="p1">P1</span></td>
+            <td>"Handles the busywork so you don't have to." + "Always ready. Never forgets." Aura is user-triggered — "always on" overstates it.</td>
+          </tr>
+          <tr>
+            <td><span class="td-url" style="color:var(--blue)">/ai-agents</span></td>
+            <td>"Always-On Persistent Agents" / "runs persistently monitoring" / "No manual triggers. No waiting. Just continuous execution."</td>
+            <td><span class="p1">P1</span></td>
+            <td>Rewrite as user-approved, event-driven agents. Remove "no manual triggers" and "persistent monitoring" until background execution is actually built and proven.</td>
+          </tr>
+          <tr>
+            <td><span class="td-url" style="color:var(--blue)">/security &amp; /trust</span></td>
+            <td>Both routes are 404. Certification badges on /features and /real-time-meeting-assistant have no destination to link to.</td>
+            <td><span class="p1">P1</span></td>
+            <td>Either build a /security page with honest current controls, or remove all badge links. A 404 security page is worse than none.</td>
+          </tr>
+          <tr>
+            <td><span class="td-url" style="color:var(--blue)">/solutions/wealth-management</span></td>
+            <td>404. Should redirect to /solutions/wealth-management-advisors.</td>
+            <td><span class="p1">P1</span></td>
+            <td>Add a 301 redirect. Any inbound links or advisor referrals hit a dead end.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: SARVAX PAGE POV -->
+<section class="sec" id="sarvax" style="padding-bottom:64px">
+  <div class="c">
+    <div class="ey ey-b">05 — SarvaX Landing Page</div>
+    <h2>What works and what to change</h2>
+    <div class="div"></div>
+
+    <div class="g2 mt24">
+      <div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:rgba(74,222,128,.7);margin-bottom:12px">What is working</div>
+        <div class="gb-item" style="border-bottom:1px solid rgba(255,255,255,.05);padding:7px 0;font-size:13px;color:var(--t2)">"AI that executes" is genuinely differentiated. Most AI answers questions — this positions SarvaX as action-taking.</div>
+        <div class="gb-item" style="border-bottom:1px solid rgba(255,255,255,.05);padding:7px 0;font-size:13px;color:var(--t2)">Wealth Advisory in the agent dropdown signals a real vertical focus, not generic AI.</div>
+        <div class="gb-item" style="border-bottom:1px solid rgba(255,255,255,.05);padding:7px 0;font-size:13px;color:var(--t2)">90-day deployment story creates a concrete sales anchor.</div>
+        <div class="gb-item" style="border-bottom:1px solid rgba(255,255,255,.05);padding:7px 0;font-size:13px;color:var(--t2)">The B2B solution/agent structure feels intentional, not generic.</div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:rgba(248,113,113,.7);margin-bottom:12px">What to change</div>
+        <div style="border-bottom:1px solid rgba(255,255,255,.05);padding:7px 0;font-size:13px;color:var(--t2)"><b style="color:var(--t1)">"Not assist, not suggest, not draft"</b> + "run autonomously" — reads as no human needed. Financial buyers will not trust this.</div>
+        <div style="border-bottom:1px solid rgba(255,255,255,.05);padding:7px 0;font-size:13px;color:var(--t2)"><b style="color:var(--t1)">Agent status labels</b> must be honest — active / demo-ready / coming soon. Never show unbuilt agents as live.</div>
+        <div style="border-bottom:1px solid rgba(255,255,255,.05);padding:7px 0;font-size:13px;color:var(--t2)"><b style="color:var(--t1)">Enterprise security claims</b> need proof. If there is no SOC 2 yet, say it is in process.</div>
+        <div style="border-bottom:1px solid rgba(255,255,255,.05);padding:7px 0;font-size:13px;color:var(--t2)"><b style="color:var(--t1)">Wealth Advisory</b> should be framed as the first wedge — not the whole company story.</div>
+      </div>
+    </div>
+
+    <div class="g2 mt24">
+      <div class="co">
+        <p><strong>Change:</strong> "AI that executes"<br>
+        <strong>To:</strong> "AI that executes approved workflows"<br>
+        Adding "approved" is not a qualifier that weakens the message. It is the feature that makes it enterprise-sellable.</p>
+      </div>
+      <div class="co">
+        <p><strong>Change:</strong> "run autonomously" / "SarvaX handles the rest"<br>
+        <strong>To:</strong> "runs with review, approval, and control"<br>
+        Financial services buyers need to see governance, not autonomy.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6: FS TREE -->
+<section class="sec-l" id="tree">
+  <div class="c">
+    <div class="ey ey-l">06 — Financial Services Sector Tree</div>
+    <h2 style="color:var(--l1)">Every sub-sector, ranked, with agents and skills</h2>
+    <div class="div div-l"></div>
+    <p class="l mt8" style="max-width:560px">Nine sub-sectors. One right answer for where to start. The tree shows everything — pick from the top down.</p>
+
+    <div class="fs-root mt32">
+      <div class="fs-root-box">Financial Services</div>
+    </div>
+
+    <div class="fs-branches">
+
+      <!-- WEALTH ADVISORY — FIRST -->
+      <div class="fs-branch fs-first">
+        <div class="fs-timing-badge"><span class="pill p-g">First</span></div>
+        <div class="fs-name">Wealth Advisory / Independent RIAs</div>
+        <div class="fs-meta">
+          <div class="fs-meta-row"><span>Pain</span><span>Annual reviews, CRM notes, 60-90 min post-meeting admin</span></div>
+          <div class="fs-meta-row"><span>Buyer</span><span>Founder / COO, decides in one meeting</span></div>
+          <div class="fs-meta-row"><span>Fit</span><span>High — meetings + docs + Aura map directly</span></div>
+          <div class="fs-meta-row"><span>Compliance</span><span>Low — SEC 204-2 only, no WORM required</span></div>
+        </div>
+        <div class="fs-agents-head">Agents</div>
+        <div class="fs-agent">Advisor Chief of Staff</div>
+        <div class="fs-agent">Meeting Prep Agent</div>
+        <div class="fs-agent">Meeting Intelligence Agent</div>
+        <div class="fs-agent">Action Packet Agent</div>
+        <div class="fs-agent">Compliance Documentation Support Agent</div>
+        <div class="fs-agents-head">Skills</div>
+        <div class="fs-skills-chips">
+          <span class="fs-skill">Annual review brief</span>
+          <span class="fs-skill">CRM-ready note</span>
+          <span class="fs-skill">Follow-up email draft</span>
+          <span class="fs-skill">Task extraction</span>
+          <span class="fs-skill">Client change detection</span>
+          <span class="fs-skill">Advisor-approved summary</span>
+        </div>
+      </div>
+
+      <!-- FAMILY OFFICES — SECOND -->
+      <div class="fs-branch fs-second">
+        <div class="fs-timing-badge"><span class="pill p-b">Second</span></div>
+        <div class="fs-name">Family Offices</div>
+        <div class="fs-meta">
+          <div class="fs-meta-row"><span>Pain</span><span>Multi-entity complexity, no good meeting AI</span></div>
+          <div class="fs-meta-row"><span>Buyer</span><span>Director of ops or family principal</span></div>
+          <div class="fs-meta-row"><span>Fit</span><span>Good — needs multi-entity graph built</span></div>
+          <div class="fs-meta-row"><span>Revenue</span><span>High — $50–150K/yr possible</span></div>
+        </div>
+        <div class="fs-agents-head">Agents</div>
+        <div class="fs-agent">Family Office Chief of Staff</div>
+        <div class="fs-agent">Entity Memory Agent</div>
+        <div class="fs-agent">Meeting Follow-through Agent</div>
+        <div class="fs-agent">Document Intelligence Agent</div>
+        <div class="fs-agents-head">Skills</div>
+        <div class="fs-skills-chips">
+          <span class="fs-skill">Multi-entity summary</span>
+          <span class="fs-skill">Trust / estate doc summary</span>
+          <span class="fs-skill">Family member action tracking</span>
+          <span class="fs-skill">Advisor coordination note</span>
+        </div>
+      </div>
+
+      <!-- INSURANCE — SECOND -->
+      <div class="fs-branch fs-second">
+        <div class="fs-timing-badge"><span class="pill p-b">Second</span></div>
+        <div class="fs-name">Insurance Advisory / Financial Planning</div>
+        <div class="fs-meta">
+          <div class="fs-meta-row"><span>Pain</span><span>Suitability docs, post-meeting notes, follow-ups</span></div>
+          <div class="fs-meta-row"><span>Buyer</span><span>Individual advisor + agency owner</span></div>
+          <div class="fs-meta-row"><span>Fit</span><span>Good once FS skill templates exist</span></div>
+          <div class="fs-meta-row"><span>Compliance</span><span>State-level, varies by product line</span></div>
+        </div>
+        <div class="fs-agents-head">Agents</div>
+        <div class="fs-agent">Client Intake Agent</div>
+        <div class="fs-agent">Suitability Documentation Agent</div>
+        <div class="fs-agent">Policy Review Agent</div>
+        <div class="fs-agent">Follow-up Agent</div>
+        <div class="fs-agents-head">Skills</div>
+        <div class="fs-skills-chips">
+          <span class="fs-skill">Needs analysis summary</span>
+          <span class="fs-skill">Policy comparison</span>
+          <span class="fs-skill">Suitability note draft</span>
+          <span class="fs-skill">Client follow-up</span>
+        </div>
+      </div>
+
+      <!-- ASSET MANAGEMENT — LATER -->
+      <div class="fs-branch fs-later">
+        <div class="fs-timing-badge"><span class="pill p-a">Later</span></div>
+        <div class="fs-name">Asset Management</div>
+        <div class="fs-meta">
+          <div class="fs-meta-row"><span>Pain</span><span>Committee minutes, decision logs, research memos</span></div>
+          <div class="fs-meta-row"><span>Buyer</span><span>CIO office, COO</span></div>
+          <div class="fs-meta-row"><span>Fit</span><span>Medium — needs institutional doc extraction</span></div>
+          <div class="fs-meta-row"><span>Difficulty</span><span>High — long sales cycles</span></div>
+        </div>
+        <div class="fs-agents-head">Agents</div>
+        <div class="fs-agent">Investment Committee Agent</div>
+        <div class="fs-agent">Research Memo Agent</div>
+        <div class="fs-agent">Decision Log Agent</div>
+        <div class="fs-agent">Compliance Review Support Agent</div>
+        <div class="fs-agents-head">Skills</div>
+        <div class="fs-skills-chips">
+          <span class="fs-skill">Committee minutes</span>
+          <span class="fs-skill">Decision extraction</span>
+          <span class="fs-skill">Investment memo draft</span>
+          <span class="fs-skill">Research summary</span>
+          <span class="fs-skill">Approval tracker</span>
+        </div>
+      </div>
+
+      <!-- PRIVATE MARKETS — LATER -->
+      <div class="fs-branch fs-later">
+        <div class="fs-timing-badge"><span class="pill p-a">Later</span></div>
+        <div class="fs-name">Private Markets / Alternatives</div>
+        <div class="fs-meta">
+          <div class="fs-meta-row"><span>Pain</span><span>K-1s, capital calls, NAV statements — all manual</span></div>
+          <div class="fs-meta-row"><span>Buyer</span><span>Fund ops team, GP / LP relations</span></div>
+          <div class="fs-meta-row"><span>Fit</span><span>Medium — needs purpose-built doc extraction</span></div>
+          <div class="fs-meta-row"><span>Competitors</span><span>Canoe ($82M), V7 Go, Alkymi are ahead</span></div>
+        </div>
+        <div class="fs-agents-head">Agents</div>
+        <div class="fs-agent">Capital Call Agent</div>
+        <div class="fs-agent">K-1 Extraction Agent</div>
+        <div class="fs-agent">Fund Document Agent</div>
+        <div class="fs-agent">Investor Reporting Agent</div>
+        <div class="fs-agents-head">Skills</div>
+        <div class="fs-skills-chips">
+          <span class="fs-skill">Capital call extraction</span>
+          <span class="fs-skill">NAV statement summary</span>
+          <span class="fs-skill">K-1 data extraction</span>
+          <span class="fs-skill">Fund update summary</span>
+          <span class="fs-skill">Source-linked table extract</span>
+        </div>
+      </div>
+
+      <!-- COMPLIANCE — LATER -->
+      <div class="fs-branch fs-later">
+        <div class="fs-timing-badge"><span class="pill p-a">Later</span></div>
+        <div class="fs-name">Compliance / Supervision Teams</div>
+        <div class="fs-meta">
+          <div class="fs-meta-row"><span>Pain</span><span>Reviewing AI outputs, flagging exceptions</span></div>
+          <div class="fs-meta-row"><span>Buyer</span><span>CCO, compliance director</span></div>
+          <div class="fs-meta-row"><span>Fit</span><span>Good fit but needs audit trail + RBAC first</span></div>
+          <div class="fs-meta-row"><span>Blocker</span><span>WORM, run store, CCO dashboard — not built</span></div>
+        </div>
+        <div class="fs-agents-head">Agents</div>
+        <div class="fs-agent">Compliance Review Agent</div>
+        <div class="fs-agent">AI Output Supervision Agent</div>
+        <div class="fs-agent">Exception Flagging Agent</div>
+        <div class="fs-agent">Audit Packet Agent</div>
+        <div class="fs-agents-head">Skills</div>
+        <div class="fs-skills-chips">
+          <span class="fs-skill">Exception detection</span>
+          <span class="fs-skill">Approval log summary</span>
+          <span class="fs-skill">Policy checklist</span>
+          <span class="fs-skill">Supervision note</span>
+        </div>
+      </div>
+
+      <!-- BANKING — AVOID -->
+      <div class="fs-branch fs-avoid">
+        <div class="fs-timing-badge"><span class="pill p-n">Avoid</span></div>
+        <div class="fs-name">Banking / Lending</div>
+        <div class="fs-meta">
+          <div class="fs-meta-row"><span>Why avoid</span><span>nCino, Salesforce FSC entrenched. Integration complexity extreme.</span></div>
+          <div class="fs-meta-row"><span>When</span><span>Phase 4 — after regulated production proven</span></div>
+        </div>
+        <div class="fs-agents-head">Future Agents</div>
+        <div class="fs-agent">Credit Memo Agent / KYC Follow-up Agent</div>
+      </div>
+
+      <!-- PRIVATE BANKING — AVOID -->
+      <div class="fs-branch fs-avoid">
+        <div class="fs-timing-badge"><span class="pill p-n">Avoid</span></div>
+        <div class="fs-name">Private Banking</div>
+        <div class="fs-meta">
+          <div class="fs-meta-row"><span>Why avoid</span><span>UHNW trust takes years. Enterprise sales cycle. High security demand.</span></div>
+          <div class="fs-meta-row"><span>When</span><span>After family office track record established</span></div>
+        </div>
+      </div>
+
+      <!-- CREDIT UNIONS — AVOID -->
+      <div class="fs-branch fs-avoid">
+        <div class="fs-timing-badge"><span class="pill p-n">Avoid</span></div>
+        <div class="fs-name">Credit Unions</div>
+        <div class="fs-meta">
+          <div class="fs-meta-row"><span>Why avoid</span><span>Budget constraints, fragmented software stacks, complex procurement</span></div>
+          <div class="fs-meta-row"><span>When</span><span>Only if specific demand emerges</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="co mt32 co-g">
+      <p><strong>Why Independent RIAs first:</strong> They decide fast. They have budget. The annual review workflow is already demoable with KaraX/CORE. The compliance burden is the lightest in all of financial services — SEC 204-2 record-keeping, not FINRA broker-dealer supervision. One paying reference customer unlocks every other conversation.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 7+8: WHY ATTRACTIVE / DANGEROUS -->
+<section class="sec" id="attract" style="padding-bottom:64px">
+  <div class="c">
+    <div class="g2" style="gap:32px">
+      <div>
+        <div class="ey ey-g">07 — Why Attractive</div>
+        <h3 class="tw mt8">What pulls us in</h3>
+        <div class="why-g why-g-c" style="grid-template-columns:1fr;gap:8px;margin-top:16px">
+          <div class="why-card"><h4>They have money</h4><p>Tech spend is 3–5% of revenue. Advisors pay $150–300/seat/month for tools that save time. The price point is proven.</p></div>
+          <div class="why-card"><h4>They already get GenAI</h4><p>85% of advisors call GenAI helpful (Advisor360, 2025). You don't need to explain why AI matters.</p></div>
+          <div class="why-card"><h4>Work is repetitive</h4><p>The same 8-step post-meeting workflow, hundreds of times a year. Perfect for agent execution.</p></div>
+          <div class="why-card"><h4>Meeting and document heavy</h4><p>Exactly what KaraX/CORE already handles. Almost no new infrastructure for the core use case.</p></div>
+          <div class="why-card"><h4>Mistakes are expensive</h4><p>Manual errors in compliance notes or missed action items have real consequences. ROI is obvious.</p></div>
+          <div class="why-card"><h4>Compliance creates urgency</h4><p>$600M+ in SEC FY2024 recordkeeping penalties. CCOs and managing partners have board-level pressure to improve documentation.</p></div>
+          <div class="why-card"><h4>One workflow becomes many</h4><p>Annual review → all reviews → onboarding → client calls. The same architecture scales across every client interaction type.</p></div>
+        </div>
+      </div>
+      <div>
+        <div class="ey" style="color:rgba(248,113,113,.7)">08 — Why Dangerous</div>
+        <h3 class="tw mt8">What can hurt us</h3>
+        <div class="why-g why-r-c" style="grid-template-columns:1fr;gap:8px;margin-top:16px">
+          <div class="why-card"><h4>Compliance is unforgiving</h4><p>One incorrect claim to a CCO or regulator and credibility is gone. There are no second chances in this market.</p></div>
+          <div class="why-card"><h4>Trust takes time</h4><p>Advisors are personally liable. They will not adopt a new tool without seeing it work on real meetings first.</p></div>
+          <div class="why-card"><h4>Integrations must be real</h4><p>Promising CRM push and failing to deliver kills the demo. Verify Wealthbox / Redtail connectors before any meeting.</p></div>
+          <div class="why-card"><h4>Jump is moving fast</h4><p>$105M raised, 27,000+ advisors, #1 in advisor satisfaction. Now building toward an "AI operating system." The window is real but narrow.</p></div>
+          <div class="why-card"><h4>No room for fake autonomy</h4><p>Any claim of "no human needed" will be challenged immediately. Approval governance is a feature, not a limitation — lead with it.</p></div>
+          <div class="why-card"><h4>Security claims must be proven</h4><p>A financial buyer will ask for the SOC 2 report and the BAA template in the first week. 404 on /security kills the conversation.</p></div>
+          <div class="why-card"><h4>One wrong claim kills credibility</h4><p>FINRA Ready on a pricing page, unlinked cert badges, "no human in the loop" — any one of these can end a deal before it starts.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 9: COMPETITORS -->
+<section class="sec-l" id="comp">
+  <div class="c">
+    <div class="ey ey-l">09 — Competitor Map</div>
+    <h2 style="color:var(--l1)">Who is in the market and where they stop</h2>
+    <div class="div div-l"></div>
+
+    <!-- JUMP SPECIAL SECTION -->
+    <h3 style="color:var(--l1);margin-top:24px;font-size:16px">Jump — the biggest threat</h3>
+    <div class="jump-box">
+      <div class="g2">
+        <div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:rgba(248,113,113,.7);margin-bottom:5px">Direct threat — move fast or lose the execution wedge</div>
+          <h3 class="tw" style="font-size:20px;margin-bottom:8px">Jump AI — jump.ai</h3>
+          <p style="font-size:13px;line-height:1.6;margin-bottom:10px">Jump started as a meeting notetaker for financial advisors. It has now raised $105M total and is explicitly building an AI operating system with "Meet, Grow, and Operate" product families. The Operate layer is exactly where SarvaX needs to be.</p>
+          <p style="font-size:13px;line-height:1.6">Jump's moat is not just the product — it is LPL Financial's pre-approval, giving access to 23,000+ advisors. SarvaX cannot compete for the LPL channel. Target independent RIAs outside enterprise broker-dealer distribution instead.</p>
+        </div>
+        <div>
+          <div class="jump-facts">
+            <div class="jf"><div class="jf-l">Total raised</div><div class="jf-v">$105M</div></div>
+            <div class="jf"><div class="jf-l">Series B lead</div><div class="jf-v">Insight Partners</div></div>
+            <div class="jf"><div class="jf-l">Advisors</div><div class="jf-v">27,000+</div></div>
+            <div class="jf"><div class="jf-l">Pricing</div><div class="jf-v">$75–120/seat/mo</div></div>
+            <div class="jf"><div class="jf-l">Enterprise</div><div class="jf-v">LPL, Osaic, Cetera</div></div>
+            <div class="jf"><div class="jf-l">Ranking</div><div class="jf-v">#1 advisor satisfaction T3/Kitces 2025</div></div>
+            <div class="jf"><div class="jf-l">Direction</div><div class="jf-v">Notetaker → AI operating system</div></div>
+            <div class="jf"><div class="jf-l">Gap</div><div class="jf-v">Approval governance layer not fully built yet</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comp-g mt24">
+      <div class="comp-group">
+        <div class="comp-group-head">Advisor AI / Notetakers</div>
+        <div class="comp-names">Jump, Zocks ($65M), Hazel (Altruist), Wealthbox AI</div>
+        <div class="comp-does">Capture meetings, push CRM notes, draft follow-up emails. Zocks is privacy-first (no recording). Hazel is custodian-bundled at $60/seat.</div>
+        <div class="comp-stop">Stops at: CRM note and follow-up draft. No structured action packet, no approval governance, no cross-tool execution workflow.</div>
+      </div>
+      <div class="comp-group">
+        <div class="comp-group-head">Wealth Operating Systems</div>
+        <div class="comp-names">Orion / Redtail, Addepar, Practifi, Salesforce FSC</div>
+        <div class="comp-does">Own the portfolio data, CRM, and planning layer. Adding AI overlays. Bundling AI at $50–60/seat. They have the data moat.</div>
+        <div class="comp-stop">Stops at: their own platform. No meeting intelligence. No conversation-to-action pipeline. SarvaX should connect to these, not compete with them.</div>
+      </div>
+      <div class="comp-group">
+        <div class="comp-group-head">Compliance / Archive</div>
+        <div class="comp-names">Smarsh (6,500+ customers), Global Relay, Theta Lake, COMPLY</div>
+        <div class="comp-does">Communications archiving, WORM storage, surveillance. Smarsh is the enterprise standard. Gartner MQ Leader.</div>
+        <div class="comp-stop">Stops at: archive and search. Does not generate advisor action packets or govern post-meeting workflows. SarvaX should produce the content that Smarsh archives — not replace it.</div>
+      </div>
+      <div class="comp-group">
+        <div class="comp-group-head">Document Intelligence</div>
+        <div class="comp-names">Canoe ($82M), V7 Go, Alkymi</div>
+        <div class="comp-does">Alternative investment document extraction — K-1s, capital calls, NAV statements, VDR processing. Institutional buyers. V7 targets private equity and finance.</div>
+        <div class="comp-stop">Stops at: document extraction. No meeting intelligence, no advisor workflow execution. Phase 3 expansion territory for SarvaX if it reaches private markets.</div>
+      </div>
+    </div>
+
+    <div class="comp-g mt10">
+      <div class="comp-group">
+        <div class="comp-group-head">Research Intelligence</div>
+        <div class="comp-names">Hebbia ($161M, a16z), AlphaSense</div>
+        <div class="comp-does">Multi-document reasoning for institutional asset managers. $10–25K/seat. Deep integration with investment research workflows. Not aimed at independent advisors.</div>
+        <div class="comp-stop">Wrong market for SarvaX now. Validates that financial services professionals pay premium prices for AI that saves meaningful time.</div>
+      </div>
+      <div class="comp-group">
+        <div class="comp-group-head">What SarvaX should learn</div>
+        <div class="comp-names">From the whole field</div>
+        <div class="comp-does">Jump: vertical-specific compliance builds trust. Zocks: privacy-first is a real differentiator for enterprise buyers. Practifi: approval checkpoints inside CRM workflows are what large advisory firms actually need. V7: source-linked citations reduce hallucination risk and build advisor trust.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 10: GAP DIAGRAM -->
+<section class="sec" id="gap" style="padding-bottom:64px">
+  <div class="c">
+    <div class="ey ey-b">10 — The Wedge</div>
+    <h2>Where competitors stop. Where SarvaX starts.</h2>
+    <div class="div"></div>
+    <p style="max-width:520px">Nobody closes the full loop from conversation to approved execution to tracked outcome. That is the gap SarvaX fills.</p>
+
+    <div class="gap-g mt24">
+      <div class="gap-side gap-stop">
+        <div class="gap-head">Competitors stop here</div>
+        <div class="gap-item">Meeting transcript</div>
+        <div class="gap-item">Speaker summary</div>
+        <div class="gap-item">Action items listed</div>
+        <div class="gap-item">CRM note pushed</div>
+        <div class="gap-item">Follow-up email drafted</div>
+        <div class="gap-item">Archive / search</div>
+        <div class="gap-item">Portfolio data queries</div>
+      </div>
+      <div class="gap-arrow">→</div>
+      <div class="gap-side gap-start">
+        <div class="gap-head">SarvaX starts here</div>
+        <div class="gap-item">Structured action packet</div>
+        <div class="gap-item">Advisor review + approval</div>
+        <div class="gap-item">Approval record persisted (DB)</div>
+        <div class="gap-item">Policy-aware execution</div>
+        <div class="gap-item">Cross-tool write-back (approved only)</div>
+        <div class="gap-item">Tracked outcome + open loops</div>
+        <div class="gap-item">Audit-supporting log</div>
+        <div class="gap-item">Vertical workflow packaging</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 11: FIRST WEDGE -->
+<section class="sec-l" id="wedge">
+  <div class="c">
+    <div class="ey ey-l">11 — First Wedge</div>
+    <h2 style="color:var(--l1)">Advisor Execution Intelligence</h2>
+    <div class="div div-l"></div>
+    <p class="l mt8" style="max-width:560px">Not AI notetaking. Not autonomous compliance. The handoff layer — conversation and documents become approved action packets, executed across every system, tracked by Aura.</p>
+
+    <div class="wf mt24">
+      <div class="wf-step w1">
+        <div class="wf-top"></div>
+        <div class="wf-b">
+          <div class="wf-num">01</div>
+          <div class="wf-name">Prepare</div>
+          <div class="wf-lbl">Input</div><div class="wf-v">CRM profile, prior notes, uploaded docs</div>
+          <div class="wf-lbl">Output</div><div class="wf-v">1-page advisor brief: context, open items, questions</div>
+          <div class="wf-lbl">Who</div><div class="wf-v">Aura (auto)</div>
+          <span class="wf-badge wb-auto">Internal only</span>
+        </div>
+      </div>
+      <div class="wf-step w2">
+        <div class="wf-top"></div>
+        <div class="wf-b">
+          <div class="wf-num">02</div>
+          <div class="wf-name">Capture</div>
+          <div class="wf-lbl">Input</div><div class="wf-v">Zoom / Teams / Google Meet audio</div>
+          <div class="wf-lbl">Output</div><div class="wf-v">Transcript + financial categories: disclosures, commitments, trigger events</div>
+          <div class="wf-lbl">Who</div><div class="wf-v">Meeting Intelligence Agent</div>
+          <span class="wf-badge wb-req">Advisor review</span>
+        </div>
+      </div>
+      <div class="wf-step w3">
+        <div class="wf-top"></div>
+        <div class="wf-b">
+          <div class="wf-num">03</div>
+          <div class="wf-name">Structure</div>
+          <div class="wf-lbl">Input</div><div class="wf-v">Approved meeting record + firm templates</div>
+          <div class="wf-lbl">Output</div><div class="wf-v">Action packet: CRM note, Reg BI draft, email, task list</div>
+          <div class="wf-lbl">Who</div><div class="wf-v">COS + Skills</div>
+          <span class="wf-badge wb-req">Full review required</span>
+        </div>
+      </div>
+      <div class="wf-step w4">
+        <div class="wf-top"></div>
+        <div class="wf-b">
+          <div class="wf-num">04</div>
+          <div class="wf-name">Approve</div>
+          <div class="wf-lbl">Input</div><div class="wf-v">Each item in approval card</div>
+          <div class="wf-lbl">Output</div><div class="wf-v">ApprovalRecord: actor, timestamp, item, version — saved to DB</div>
+          <div class="wf-lbl">Who</div><div class="wf-v">Advisor (human)</div>
+          <span class="wf-badge wb-req">Every item</span>
+        </div>
+      </div>
+      <div class="wf-step w5">
+        <div class="wf-top"></div>
+        <div class="wf-b">
+          <div class="wf-num">05</div>
+          <div class="wf-name">Export</div>
+          <div class="wf-lbl">Input</div><div class="wf-v">Approved items only</div>
+          <div class="wf-lbl">Output</div><div class="wf-v">CRM note written, email to drafts, task created</div>
+          <div class="wf-lbl">Who</div><div class="wf-v">ExecutionPolicy + Composio</div>
+          <span class="wf-badge wb-auto">After approval only</span>
+        </div>
+      </div>
+      <div class="wf-step w6">
+        <div class="wf-top"></div>
+        <div class="wf-b">
+          <div class="wf-num">06</div>
+          <div class="wf-name">Track</div>
+          <div class="wf-lbl">Input</div><div class="wf-v">Open items, calendar, approval log</div>
+          <div class="wf-lbl">Output</div><div class="wf-v">Daily brief, overdue alerts, audit log, memory updated</div>
+          <div class="wf-lbl">Who</div><div class="wf-v">Aura (continuous)</div>
+          <span class="wf-badge wb-auto">Continuous</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="g3 mt24">
+      <div class="card-l">
+        <div class="card-tag-l">Demo story</div>
+        <h4>One client name → 12-minute demo</h4>
+        <p>Advisor types a client name. Prep brief in 30 seconds. Meeting runs. Action packet appears. Advisor approves. CRM updates. Show one complete loop — no hand-waving.</p>
+      </div>
+      <div class="card-l">
+        <div class="card-tag-l">Pilot boundary</div>
+        <h4>30 days, 5+ meetings, independent RIA only</h4>
+        <p>No investment advice. No autonomous compliance. No broker-dealer pilots. No FINRA claims. Advisor approves every output. CSV export works before CRM connector is verified.</p>
+      </div>
+      <div class="card-l">
+        <div class="card-tag-l">Build first (in order)</div>
+        <h4>5 things before any pilot</h4>
+        <p>1. Fix Zoom bot timeout. 2. ApprovalRecord DB. 3. ExecutionPolicy middleware. 4. Verify CRM field mapping on sandbox. 5. Financial services skill templates.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 12: CLAIM RULES -->
+<section class="sec" id="claims" style="padding-bottom:64px">
+  <div class="c">
+    <div class="ey ey-b">12 — Claim Rules</div>
+    <h2>What to say, what to qualify, what to remove</h2>
+    <div class="div"></div>
+    <p style="max-width:520px">These apply to the website, demos, investor decks, and sales calls. No exceptions.</p>
+
+    <div class="cr-g mt24">
+      <div class="cr-col cr-g-c">
+        <div class="cr-head">Safe to say today</div>
+        <div class="cr-item"><b>Meeting summaries and transcripts</b>Production-grade. Say it clearly.</div>
+        <div class="cr-item"><b>Document context + OneChat</b>Standard text documents — works well.</div>
+        <div class="cr-item"><b>AI workflows and skills</b>Sequential workflows, reusable skill templates — real.</div>
+        <div class="cr-item"><b>Connected apps</b>Google, Slack, Notion, Jira, email — qualified OAuth working.</div>
+        <div class="cr-item"><b>User-approved task execution</b>Human in the loop before any system action — this is the product.</div>
+        <div class="cr-item"><b>Advisor-reviewed documentation support</b>Drafts for advisor review, not compliant output. Say this clearly.</div>
+        <div class="cr-item"><b>Multi-model AI routing</b>Claude, Gemini abstraction — real.</div>
+      </div>
+      <div class="cr-col cr-y-c">
+        <div class="cr-head">Say with qualification</div>
+        <div class="cr-item"><b>1000+ integrations</b>Via Composio. Say: "Google, Slack, Notion, Jira tested in production. Additional integrations available."</div>
+        <div class="cr-item"><b>AI agents</b>Add: "approval-aware agents" — never "autonomous agents."</div>
+        <div class="cr-item"><b>Aura / Chief of Staff</b>Say "always ready" not "always on." Aura is user-triggered today.</div>
+        <div class="cr-item"><b>Financial services</b>Say: "we work with wealth advisory firms." Don't imply the whole sector is live.</div>
+        <div class="cr-item"><b>Audit support</b>Say: "advisor-approved records support your documentation process." Not "audit-ready."</div>
+        <div class="cr-item"><b>CRM export</b>Only say "CRM integration" after the connector is tested on a real sandbox instance.</div>
+        <div class="cr-item"><b>Enterprise security</b>Say what controls exist. Don't imply certifications you don't have.</div>
+      </div>
+      <div class="cr-col cr-r-c">
+        <div class="cr-head">Do not say</div>
+        <div class="cr-item"><b>SOC 2 Type II certified</b>Not until the report is issued and linked.</div>
+        <div class="cr-item"><b>HIPAA compliant</b>Not until legal controls and BAA process are documented and verified.</div>
+        <div class="cr-item"><b>BAA-ready</b>Same as above. Do not claim.</div>
+        <div class="cr-item"><b>FINRA ready / SEC 206(4)-7</b>Remove from pricing immediately. Not built.</div>
+        <div class="cr-item"><b>WORM compliant</b>Not built. Records can be edited or deleted.</div>
+        <div class="cr-item"><b>Without human in the loop</b>This is on the workflow page. Remove. It is factually wrong and legally risky.</div>
+        <div class="cr-item"><b>Autonomous compliance</b>Never. In any context. For any audience.</div>
+        <div class="cr-item"><b>Investment advice</b>Never. SEC IA Act fiduciary exposure. Not negotiable.</div>
+        <div class="cr-item"><b>Native Redtail / Wealthbox</b>Only after connector is built and tested on a real instance.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 13: FINAL RECOMMENDATION -->
+<section class="sec-l" id="verdict">
+  <div class="c">
+    <div class="ey ey-l">13 — Final Recommendation</div>
+    <h2 style="color:var(--l1)">The decision</h2>
+    <div class="div div-l"></div>
+
+    <div class="fc-g mt24">
+      <div class="fc">
+        <div class="fc-q">What should KaraX be?</div>
+        <div class="fc-a">Personal AI execution workspace. User operates the AI. Clean of all enterprise compliance and regulatory claims. Keep the product honest.</div>
+      </div>
+      <div class="fc">
+        <div class="fc-q">What should SarvaX be?</div>
+        <div class="fc-a b">B2B agentic execution platform. AI operates approved business workflows. Revenue comes from here. Wealth advisory is the first vertical.</div>
+      </div>
+      <div class="fc">
+        <div class="fc-q">Continue Financial Services?</div>
+        <div class="fc-a g">Yes. The infrastructure is real. The pain is real. The buyer is reachable. Fix the website first, then pilot.</div>
+      </div>
+      <div class="fc">
+        <div class="fc-q">Which sub-sector first? Why?</div>
+        <div class="fc-a">Independent RIAs. Shortest decision cycle. Lowest compliance burden. Annual review workflow is already demoable. Principal buys directly.</div>
+      </div>
+      <div class="fc">
+        <div class="fc-q">Fix immediately (day 1)</div>
+        <div class="fc-a r">Remove SOC 2 / HIPAA / BAA badges. Remove FINRA from pricing. Rewrite workflow page. Fix "always on" Aura. Before any prospect sees the site.</div>
+      </div>
+      <div class="fc">
+        <div class="fc-q">Build first (in order)</div>
+        <div class="fc-a">1. Zoom bot fix. 2. ApprovalRecord DB. 3. ExecutionPolicy. 4. Verify CRM field mapping. 5. Financial services skill templates. Everything else waits.</div>
+      </div>
+      <div class="fc">
+        <div class="fc-q">What should sales say?</div>
+        <div class="fc-a">SarvaX deploys AI agents for the workflows that cost your advisors the most time. Every action requires your approval before it executes. Here is the demo. Here is the 30-day pilot offer.</div>
+      </div>
+      <div class="fc">
+        <div class="fc-q">What should investors hear?</div>
+        <div class="fc-a">We built real AI infrastructure — KaraX proves it. SarvaX packages it for B2B verticals. Wealth advisory is the first. The infrastructure is proven. The vertical is in pilot. First revenue in 60 days.</div>
+      </div>
+      <div class="fc">
+        <div class="fc-q">Stop saying immediately</div>
+        <div class="fc-a r">SOC 2 certified. HIPAA compliant. FINRA ready. Always-on Aura. Autonomous execution. Without human in the loop. WORM storage. Native Redtail / Wealthbox. Investment advice.</div>
+      </div>
+      <div class="fc-hero">
+        <h3>The one-line anchor</h3>
+        <p>KaraX proves the capability. SarvaX packages it for business value. CORE powers both. The first revenue comes from one independent RIA advisor who stops spending 90 minutes on post-meeting admin and starts spending 10.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="c" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+    <div>
+      <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.75)">C3A Labs — Decision Board</div>
+      <div style="font-size:11px;color:var(--t3);margin-top:2px">Internal only — May 2026 — Do not share externally</div>
+    </div>
+    <div style="font-size:11px;color:var(--t3);max-width:480px;line-height:1.5">Sources: Live karax.ai production audit (May 2026), Jump press release Feb 2026 (Insight Partners), Zocks press release Jan 2026 (Lightspeed / QED), Kitces Research 2025, Advisor360 2025, SEC FY2024 enforcement report</div>
+  </div>
+</footer>
+
+<script>
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const el=document.querySelector(a.getAttribute('href'));
+    if(el){window.scrollTo({top:el.getBoundingClientRect().top+scrollY-50,behavior:'smooth'})}
+  });
+});
+// Active nav
+const secs=document.querySelectorAll('section[id]');
+const links=document.querySelectorAll('.nav-ls a');
+new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      const id=en.target.id;
+      links.forEach(l=>{
+        const on=l.getAttribute('href')==='#'+id;
+        l.style.color=on?'#fff':'rgba(255,255,255,0.55)';
+        l.style.background=on?'rgba(255,255,255,0.08)':'';
+      });
+    }
+  });
+},{rootMargin:'-10% 0px -80% 0px'}).observe_all=secs.forEach(s=>
+  new IntersectionObserver(entries=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting){
+        links.forEach(l=>{
+          const on=l.getAttribute('href')==='#'+en.target.id;
+          l.style.color=on?'#fff':'rgba(255,255,255,0.55)';
+          l.style.background=on?'rgba(255,255,255,0.08)':'';
+        });
+      }
+    });
+  },{rootMargin:'-10% 0px -80% 0px'}).observe(s)
+);
+</script>
+</body>
+</html>
